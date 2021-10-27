@@ -110,16 +110,12 @@
                     return this.modelValue
                 },
                 set(value) {
-                    // emit menjalankan events update untuk memperbarui variabel modelValue
+                    // emit menjalankan events update untuk memperbarui variabel modelValue yang akan memperbarui juga variabel email dan password pada parent
                     this.$emit('update:modelValue', value)
                 }
             }
         }
-        // data() {
-        //     return {
-        //         inputValue: ''
-        //     }
-        // }
+
     })
     app.mount('#app')
 </script>

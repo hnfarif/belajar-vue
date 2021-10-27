@@ -68,11 +68,13 @@
     // data function disini lingkupnya hanya dapat membaca variabel didalam component login-form
     app.component('login-form', {
         // :label merupakan shorthand dari v-bind:label, digunakan untuk melakukan passing data antar components.
+        // <p v-for="(str,i) in inputs" :key="i">{{ i }}</p> bisa gunakan variabel i untuk mendapatkan nilai index arraynya
         template: `
             <form @submit.prevent="handleSubmit">
                 <h1>{{ title }}</h1>
-                <custom-input v-model="email" :label="emailLabel"/>
-                <custom-input  v-model="password" :label="passwordLabel"/>
+                <custom-input 
+                v-for="(input,i) in inputs" :key="i"
+                v-model="input.value" :label="input.label" :type="input.type"/>
                 <button>Log In</button>
             </form>
         `,
@@ -81,15 +83,23 @@
         data() {
             return {
                 title: 'Login Form',
-                email: '',
-                password: '',
-                emailLabel: 'Email',
-                passwordLabel: 'Password'
+                inputs: [{
+                        label: 'Email',
+                        value: '',
+                        type: 'email'
+                    },
+                    {
+                        label: 'Password',
+                        value: '',
+                        type: 'password'
+                    }
+                ],
+
             }
         },
         methods: {
             handleSubmit() {
-                console.log(this.email, this.password);
+                console.log(this.inputs[0].value, this.inputs[1].value);
             }
         }
     })
@@ -98,19 +108,19 @@
         template: `
             <label>
                 {{ label }}
-                <input type="text" v-model="inputValue">
+                <input :type="type" v-model="inputValue">
             </label>
 
         `,
         // nilai didalam props bersifat immutable (tidak dapat diubah karena diambil dari parent component)
-        props: ['label', 'modelValue'],
+        props: ['label', 'type', 'modelValue'],
         computed: {
             inputValue: {
                 get() {
                     return this.modelValue
                 },
                 set(value) {
-                    // emit menjalankan events update untuk memperbarui variabel modelValue
+                    // emit menjalankan events update untuk memperbarui variabel modelValue yang akan memperbarui juga variabel email dan password pada parent
                     this.$emit('update:modelValue', value)
                 }
             }
